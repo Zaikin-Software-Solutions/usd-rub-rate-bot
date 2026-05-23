@@ -1,9 +1,9 @@
+# Production compose: pulls the prebuilt multi-arch image from GHCR.
+# For local development with rebuild-on-change, use:
+#   docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 services:
   usd-rub-rate-bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: usd-rub-rate-bot:latest
+    image: ghcr.io/zaikin-software-solutions/usd-rub-rate-bot:latest
     container_name: usd-rub-rate-bot
     restart: unless-stopped
     env_file:
