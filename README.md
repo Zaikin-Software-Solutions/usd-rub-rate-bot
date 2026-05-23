@@ -1,8 +1,8 @@
 # usd-rub-rate-bot
 
 [![CI](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Zaikin-Software-Solutions/usd-rub-rate-bot?display_name=tag&sort=semver)](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/releases)
-[![Image](https://ghcr-badge.egpl.dev/Zaikin-Software-Solutions/usd-rub-rate-bot/latest_tag?trim=major&label=ghcr.io)](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/pkgs/container/usd-rub-rate-bot)
+[![Release](https://img.shields.io/github/v/release/Zaikin-Software-Solutions/usd-rub-rate-bot?display_name=tag&sort=semver&cacheSeconds=300)](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/releases)
+[![Docker image](https://img.shields.io/badge/ghcr.io-usd--rub--rate--bot-blue?logo=docker&logoColor=white)](https://github.com/Zaikin-Software-Solutions/usd-rub-rate-bot/pkgs/container/usd-rub-rate-bot)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 
