@@ -1,0 +1,15 @@
+services:
+  usd-rub-rate-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: usd-rub-rate-bot:latest
+    container_name: usd-rub-rate-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
