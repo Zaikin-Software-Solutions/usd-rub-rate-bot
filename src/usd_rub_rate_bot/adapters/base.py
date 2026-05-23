@@ -19,10 +19,15 @@ async def fetch_json(
     method: str = "GET",
     headers: dict[str, str] | None = None,
     json_body: dict[str, Any] | None = None,
+    proxy: str | None = None,
 ) -> Any:
     """Fetch a URL and parse it as JSON.
 
     Raises ``RateSourceError`` on any non-2xx response, transport error, or invalid JSON.
+
+    ``proxy`` accepts an HTTP proxy URL (``http://user:pass@host:port``); it is
+    forwarded to aiohttp directly. SOCKS5 is not supported here to keep the
+    dependency surface minimal.
     """
 
     timeout = aiohttp.ClientTimeout(total=timeout_seconds)
@@ -33,6 +38,7 @@ async def fetch_json(
             headers=headers,
             json=json_body,
             timeout=timeout,
+            proxy=proxy,
         ) as response:
             if response.status >= 400:
                 body = await response.text()
@@ -53,12 +59,16 @@ async def fetch_text(
     *,
     timeout_seconds: float,
     headers: dict[str, str] | None = None,
+    proxy: str | None = None,
 ) -> str:
-    """Fetch a URL and return its body as text. Raises ``RateSourceError`` on failure."""
+    """Fetch a URL and return its body as text. Raises ``RateSourceError`` on failure.
+
+    ``proxy`` accepts an HTTP proxy URL; see ``fetch_json``.
+    """
 
     timeout = aiohttp.ClientTimeout(total=timeout_seconds)
     try:
-        async with session.get(url, headers=headers, timeout=timeout) as response:
+        async with session.get(url, headers=headers, timeout=timeout, proxy=proxy) as response:
             if response.status >= 400:
                 body = await response.text()
                 raise RateSourceError(f"HTTP {response.status} from {url}: {body[:200]}")

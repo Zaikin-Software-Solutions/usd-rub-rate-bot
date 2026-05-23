@@ -35,20 +35,31 @@ async def _run(settings: Settings) -> None:
     )
     http_session = aiohttp.ClientSession()
     try:
+        proxy = settings.http_proxy_url
         akbars = AkBarsClient(
             http_session,
             city_fias_ref=settings.akbars_city_fias_ref,
             timeout_seconds=settings.http_timeout_seconds,
+            proxy_url=proxy,
         )
         tbank = TBankClient(
             http_session,
             category=settings.tbank_rate_category,
             timeout_seconds=settings.http_timeout_seconds,
+            proxy_url=proxy,
         )
         cbr_provider = CentralBankProvider(
             clients=(
-                CbrXmlDailyClient(http_session, timeout_seconds=settings.http_timeout_seconds),
-                CbrOfficialClient(http_session, timeout_seconds=settings.http_timeout_seconds),
+                CbrXmlDailyClient(
+                    http_session,
+                    timeout_seconds=settings.http_timeout_seconds,
+                    proxy_url=proxy,
+                ),
+                CbrOfficialClient(
+                    http_session,
+                    timeout_seconds=settings.http_timeout_seconds,
+                    proxy_url=proxy,
+                ),
             )
         )
         aggregator = RatesAggregator(akbars=akbars, tbank=tbank, cbr_provider=cbr_provider)

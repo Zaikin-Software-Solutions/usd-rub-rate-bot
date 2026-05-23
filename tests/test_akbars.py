@@ -62,3 +62,18 @@ async def test_http_500_raises(session: aiohttp.ClientSession) -> None:
         client = AkBarsClient(session, city_fias_ref="city-x")
         with pytest.raises(RateSourceError):
             await client.fetch_rate()
+
+
+async def test_proxy_url_is_forwarded(session: aiohttp.ClientSession) -> None:
+    payload = {"branches": [{"buyPrice": 89.10, "sellPrice": 92.40}]}
+    with aioresponses() as m:
+        m.get(URL_RE, payload=payload)
+        client = AkBarsClient(
+            session,
+            city_fias_ref="city-x",
+            proxy_url="http://user:pass@proxy.example:1234",
+        )
+        await client.fetch_rate()
+
+        ((_key, calls),) = list(m.requests.items())
+        assert calls[0].kwargs.get("proxy") == "http://user:pass@proxy.example:1234"

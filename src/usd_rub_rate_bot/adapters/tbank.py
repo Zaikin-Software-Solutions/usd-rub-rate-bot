@@ -28,15 +28,22 @@ class TBankClient:
         category: str,
         timeout_seconds: float = 10.0,
         api_url: str = API_URL,
+        proxy_url: str | None = None,
     ) -> None:
         self._session = session
         self._category = category
         self._timeout = timeout_seconds
         self._api_url = api_url
+        self._proxy_url = proxy_url
 
     async def fetch_rate(self) -> CommercialRate:
         url = f"{self._api_url}?from=USD&to=RUB"
-        data = await fetch_json(self._session, url, timeout_seconds=self._timeout)
+        data = await fetch_json(
+            self._session,
+            url,
+            timeout_seconds=self._timeout,
+            proxy=self._proxy_url,
+        )
         return _parse_response(data, category=self._category)
 
 

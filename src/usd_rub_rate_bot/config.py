@@ -32,6 +32,12 @@ class Settings(BaseSettings):
     tbank_rate_category: str = DEFAULT_TBANK_RATE_CATEGORY
     akbars_city_fias_ref: str = DEFAULT_AKBARS_CITY_FIAS_REF
 
+    # Optional HTTP proxy applied to ALL outgoing rate-source requests.
+    # Telegram traffic is NOT routed through this proxy.
+    # Useful when running from an IP range that some sources (e.g. AkBars)
+    # geo-block. Format: http://user:pass@host:port.
+    http_proxy_url: str | None = None
+
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     log_format: Literal["json", "console"] = "json"
 

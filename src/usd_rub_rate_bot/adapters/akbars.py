@@ -25,11 +25,13 @@ class AkBarsClient:
         city_fias_ref: str,
         timeout_seconds: float = 10.0,
         api_url: str = API_URL,
+        proxy_url: str | None = None,
     ) -> None:
         self._session = session
         self._city_fias_ref = city_fias_ref
         self._timeout = timeout_seconds
         self._api_url = api_url
+        self._proxy_url = proxy_url
 
     async def fetch_rate(self) -> CommercialRate:
         params = f"?cityFiasRef={self._city_fias_ref}&currencycode=USD"
@@ -47,6 +49,7 @@ class AkBarsClient:
             self._api_url + params,
             timeout_seconds=self._timeout,
             headers=headers,
+            proxy=self._proxy_url,
         )
         return _parse_response(data)
 

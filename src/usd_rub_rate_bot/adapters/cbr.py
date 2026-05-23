@@ -34,13 +34,20 @@ class CbrXmlDailyClient:
         *,
         timeout_seconds: float = 10.0,
         api_url: str = CBR_XML_DAILY_URL,
+        proxy_url: str | None = None,
     ) -> None:
         self._session = session
         self._timeout = timeout_seconds
         self._api_url = api_url
+        self._proxy_url = proxy_url
 
     async def fetch_rate(self) -> CentralBankRate:
-        data = await fetch_json(self._session, self._api_url, timeout_seconds=self._timeout)
+        data = await fetch_json(
+            self._session,
+            self._api_url,
+            timeout_seconds=self._timeout,
+            proxy=self._proxy_url,
+        )
         return _parse_xml_daily(data, source=self.source)
 
 
@@ -55,13 +62,20 @@ class CbrOfficialClient:
         *,
         timeout_seconds: float = 10.0,
         api_url: str = CBR_OFFICIAL_XML_URL,
+        proxy_url: str | None = None,
     ) -> None:
         self._session = session
         self._timeout = timeout_seconds
         self._api_url = api_url
+        self._proxy_url = proxy_url
 
     async def fetch_rate(self) -> CentralBankRate:
-        body = await fetch_text(self._session, self._api_url, timeout_seconds=self._timeout)
+        body = await fetch_text(
+            self._session,
+            self._api_url,
+            timeout_seconds=self._timeout,
+            proxy=self._proxy_url,
+        )
         return _parse_official_xml(body, source=self.source)
 
 

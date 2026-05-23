@@ -78,6 +78,7 @@ All settings come from environment variables; a `.env` file is read in dev.
 | `HTTP_TIMEOUT_SECONDS`  | no       | `10`                                        | Outgoing HTTP timeout per source.                                           |
 | `TBANK_RATE_CATEGORY`   | no       | `ATMCashoutRateGroup`                       | Which category to pick from T-Bank's response. Default = the ATM cash-exchange rate. |
 | `AKBARS_CITY_FIAS_REF`  | no       | `6b1bab7d-ee45-4168-a2a6-4ce2880d90d3` (Kazan) | FIAS reference id of the city for AkBars rates.                          |
+| `HTTP_PROXY_URL`        | no       | —                                           | HTTP proxy applied to ALL rate-source requests (not to Telegram). Use when running from an IP range that sources geo-block. Format: `http://user:pass@host:port`. |
 | `LOG_LEVEL`             | no       | `INFO`                                      | `DEBUG` / `INFO` / `WARNING` / `ERROR`.                                     |
 | `LOG_FORMAT`            | no       | `json`                                      | `json` (prod) or `console` (dev).                                           |
 
