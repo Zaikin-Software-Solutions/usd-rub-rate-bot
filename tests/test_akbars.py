@@ -12,7 +12,9 @@ from usd_rub_rate_bot.adapters.base import RateSourceError
 URL_RE = re.compile(re.escape(API_URL) + r".*")
 
 
-def _payload(*, purchase: float | None = 89.10, sale: float | None = 92.40) -> list[dict]:
+def _payload(
+    *, purchase: float | None = 89.10, sale: float | None = 92.40
+) -> list[dict[str, object]]:
     usd: dict[str, object] = {"currencyCode": "USD", "isCash": True}
     if purchase is not None:
         usd["purchasePrice"] = purchase
