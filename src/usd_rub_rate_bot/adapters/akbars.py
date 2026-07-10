@@ -1,7 +1,8 @@
 """AkBars bank cash USD rate adapter.
 
-Endpoint: https://www.akbars.ru/api/v2/offices/bestrates
-Returns the "best" buy/sell rates across the bank's branches in a given city.
+Endpoint: https://www.akbars.ru/api/currency-svc/offices/best-rates
+Returns the "best" buy/sell rates across the bank's branches in a given city
+as a flat list of per-currency quotes.
 """
 
 from __future__ import annotations
@@ -13,8 +14,9 @@ import aiohttp
 from usd_rub_rate_bot.adapters.base import RateSourceError, fetch_json
 from usd_rub_rate_bot.domain.models import CommercialRate
 
-API_URL = "https://www.akbars.ru/api/v2/offices/bestrates"
+API_URL = "https://www.akbars.ru/api/currency-svc/offices/best-rates"
 SOURCE = "AkBars"
+CURRENCY_CODE = "USD"
 
 
 class AkBarsClient:
@@ -34,7 +36,7 @@ class AkBarsClient:
         self._proxy_url = proxy_url
 
     async def fetch_rate(self) -> CommercialRate:
-        params = f"?cityFiasRef={self._city_fias_ref}&currencycode=USD"
+        params = f"?cityFiasRef={self._city_fias_ref}"
         # AkBars sometimes rejects "default" UAs; mimic a real browser.
         headers = {
             "User-Agent": (
@@ -55,26 +57,31 @@ class AkBarsClient:
 
 
 def _parse_response(data: Any) -> CommercialRate:
-    if not isinstance(data, dict):
-        raise RateSourceError(f"AkBars: expected object, got {type(data).__name__}")
+    if not isinstance(data, list) or not data:
+        raise RateSourceError("AkBars: expected a non-empty list of quotes")
 
-    branches = data.get("branches")
-    if not isinstance(branches, list) or not branches:
-        raise RateSourceError("AkBars: 'branches' is missing or empty")
+    quote = _find_usd_quote(data)
+    if quote is None:
+        raise RateSourceError(f"AkBars: {CURRENCY_CODE} quote not found in response")
 
-    branch = branches[0]
-    if not isinstance(branch, dict):
-        raise RateSourceError("AkBars: first branch is not an object")
-
-    buy = _positive_float(branch.get("buyPrice"))
-    sell = _positive_float(branch.get("sellPrice"))
+    # ``purchasePrice`` is the rate at which the bank buys USD from the customer,
+    # ``salePrice`` the rate at which it sells USD to the customer.
+    buy = _positive_float(quote.get("purchasePrice"))
+    sell = _positive_float(quote.get("salePrice"))
 
     if buy is None:
-        raise RateSourceError(f"AkBars: invalid buyPrice {branch.get('buyPrice')!r}")
+        raise RateSourceError(f"AkBars: invalid purchasePrice {quote.get('purchasePrice')!r}")
     if sell is None:
-        raise RateSourceError(f"AkBars: invalid sellPrice {branch.get('sellPrice')!r}")
+        raise RateSourceError(f"AkBars: invalid salePrice {quote.get('salePrice')!r}")
 
     return CommercialRate(source=SOURCE, buy=buy, sell=sell)
+
+
+def _find_usd_quote(quotes: list[Any]) -> dict[str, Any] | None:
+    for quote in quotes:
+        if isinstance(quote, dict) and quote.get("currencyCode") == CURRENCY_CODE:
+            return quote
+    return None
 
 
 def _positive_float(value: object) -> float | None:
