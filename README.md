@@ -13,7 +13,7 @@ several Russian sources, alongside the official Central Bank of Russia rate.
 
 | Source     | What's published         | Endpoint                                                                      |
 | ---------- | ------------------------ | ----------------------------------------------------------------------------- |
-| **AkBars** | cash buy / sell USD      | `https://www.akbars.ru/api/v2/offices/bestrates?currencycode=USD&cityFiasRef=…` |
+| **AkBars** | cash buy / sell USD      | `https://www.akbars.ru/api/currency-svc/offices/best-rates?cityFiasRef=…` |
 | **T-Bank** | ATM buy / sell USD       | `https://api.tinkoff.ru/v1/currency_rates?from=USD&to=RUB` (category configurable) |
 | **CBR**    | official daily USD rate  | with fallback between two mirrors (see below)                                 |
 
